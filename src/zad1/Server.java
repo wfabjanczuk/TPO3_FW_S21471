@@ -2,10 +2,14 @@ package zad1;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -16,6 +20,10 @@ public class Server extends Thread implements LoggableThread {
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
 
+    private static Charset charset = StandardCharsets.UTF_8;
+    private static final int bufferSize = 1024;
+    private ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
+    private StringBuffer stringBuffer = new StringBuffer();
 
     public Server(String host, int port) {
         try {
@@ -73,10 +81,6 @@ public class Server extends Thread implements LoggableThread {
             return executeRead(selectionKey);
         }
 
-        if (selectionKey.isWritable()) {
-            return executeWrite(selectionKey);
-        }
-
         return false;
     }
 
@@ -89,11 +93,53 @@ public class Server extends Thread implements LoggableThread {
         return true;
     }
 
-    private boolean executeRead(SelectionKey selectionKey) {
-        return true;
+    private boolean executeRead(SelectionKey selectionKey) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
+
+        if (!socketChannel.isOpen()) {
+            return false;
+        }
+
+        String command = getCommand(socketChannel);
+        logThreadReceived(command);
+
+        return executeCommand(command, socketChannel);
     }
 
-    private boolean executeWrite(SelectionKey selectionKey) {
+    private String getCommand(SocketChannel socketChannel) {
+        stringBuffer.setLength(0);
+        byteBuffer.clear();
+
+        try {
+            while (socketChannel.read(byteBuffer) > 0) {
+                byteBuffer.flip();
+                CharBuffer charBuffer = charset.decode(byteBuffer);
+
+                while (charBuffer.hasRemaining()) {
+                    char c = charBuffer.get();
+                    if (isEndlineChar(c)) {
+                        return stringBuffer.toString();
+                    }
+                    stringBuffer.append(c);
+                }
+            }
+        } catch (Exception exception) {
+            logThreadException(exception);
+        }
+
+        return stringBuffer.toString();
+    }
+
+    private boolean isEndlineChar(char c) {
+        return c == '\r' || c == '\n';
+    }
+
+    private boolean executeCommand(String command, SocketChannel socketChannel) throws IOException {
+        if (command.isEmpty() || command.equals("bye")) {
+            socketChannel.socket().close();
+            return true;
+        }
+
         return true;
     }
 }

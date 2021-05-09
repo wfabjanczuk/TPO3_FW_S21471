@@ -20,4 +20,21 @@ public class Admin extends Thread implements LoggableThread {
             System.exit(1);
         }
     }
+
+    public void run() {
+        try {
+            String getTopicsMessage = "get topics";
+
+            out.println(getTopicsMessage);
+            logThreadSent(getTopicsMessage);
+
+            String byeMessage = "bye";
+            out.println(byeMessage);
+            logThreadSent(byeMessage);
+
+            sock.close();
+        } catch (Exception exception) {
+            logThreadException(exception);
+        }
+    }
 }

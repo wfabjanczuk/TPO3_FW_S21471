@@ -30,4 +30,16 @@ public interface LoggableThread {
     default void logThreadAcceptedConnection() {
         System.out.println(getThreadLabel() + " new connection accepted.");
     }
+
+    default void logThreadReceived(String message) {
+        String information = (message == null || message.trim().length() == 0)
+                ? " received empty message."
+                : " received message: " + message;
+
+        System.out.println(getThreadLabel() + information);
+    }
+
+    default void logThreadSent(String message) {
+        System.out.println(getThreadLabel() + " sent message: " + message);
+    }
 }
