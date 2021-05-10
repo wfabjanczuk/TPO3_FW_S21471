@@ -31,15 +31,19 @@ public interface LoggableThread {
         System.out.println(getThreadLabel() + " new connection accepted.");
     }
 
+    default void logThreadChannelClosed() {
+        System.out.println(getThreadLabel() + " channel closed.");
+    }
+
     default void logThreadReceived(String message) {
         String information = (message == null || message.trim().length() == 0)
                 ? " received empty message."
-                : " received message: " + message;
+                : " received message: " + message.trim();
 
         System.out.println(getThreadLabel() + information);
     }
 
     default void logThreadSent(String message) {
-        System.out.println(getThreadLabel() + " sent message: " + message);
+        System.out.println(getThreadLabel() + " sent message: " + message.trim());
     }
 }

@@ -1,5 +1,7 @@
 package zad1;
 
+import zad1.constant.Message;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -23,14 +25,17 @@ public class Admin extends Thread implements LoggableThread {
 
     public void run() {
         try {
-            String getTopicsMessage = "get topics";
+            String getTopicsMessage = Message.getTopics;
 
             out.println(getTopicsMessage);
             logThreadSent(getTopicsMessage);
 
-            String byeMessage = "bye";
-            out.println(byeMessage);
-            logThreadSent(byeMessage);
+            String resp = in.readLine();
+            logThreadReceived(resp);
+
+            String goodbyeMessage = Message.goodbye;
+            out.println(goodbyeMessage);
+            logThreadSent(goodbyeMessage);
 
             sock.close();
         } catch (Exception exception) {

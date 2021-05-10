@@ -1,5 +1,8 @@
 package zad1;
 
+import zad1.constant.Message;
+import zad1.serialization.Json;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -23,7 +26,6 @@ public class Server extends Thread implements LoggableThread {
     private static Charset charset = StandardCharsets.UTF_8;
     private static final int bufferSize = 1024;
     private ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
-    private StringBuffer stringBuffer = new StringBuffer();
 
     public Server(String host, int port) {
         try {
@@ -72,7 +74,7 @@ public class Server extends Thread implements LoggableThread {
         isServerRunning = false;
     }
 
-    private boolean serveSelectionKey(SelectionKey selectionKey) throws IOException {
+    private boolean serveSelectionKey(SelectionKey selectionKey) throws Exception {
         if (selectionKey.isAcceptable()) {
             return executeAccept();
         }
@@ -93,22 +95,22 @@ public class Server extends Thread implements LoggableThread {
         return true;
     }
 
-    private boolean executeRead(SelectionKey selectionKey) throws IOException {
+    private boolean executeRead(SelectionKey selectionKey) throws Exception {
         SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
 
         if (!socketChannel.isOpen()) {
             return false;
         }
 
-        String command = getCommand(socketChannel);
-        logThreadReceived(command);
+        String message = readLine(socketChannel);
+        logThreadReceived(message);
 
-        return executeCommand(command, socketChannel);
+        return handleMessage(message, socketChannel);
     }
 
-    private String getCommand(SocketChannel socketChannel) {
-        stringBuffer.setLength(0);
+    private String readLine(SocketChannel socketChannel) {
         byteBuffer.clear();
+        StringBuilder requestStringBuilder = new StringBuilder();
 
         try {
             while (socketChannel.read(byteBuffer) > 0) {
@@ -118,28 +120,58 @@ public class Server extends Thread implements LoggableThread {
                 while (charBuffer.hasRemaining()) {
                     char c = charBuffer.get();
                     if (isEndlineChar(c)) {
-                        return stringBuffer.toString();
+                        return requestStringBuilder.toString();
                     }
-                    stringBuffer.append(c);
+                    requestStringBuilder.append(c);
                 }
             }
         } catch (Exception exception) {
             logThreadException(exception);
         }
 
-        return stringBuffer.toString();
+        return requestStringBuilder.toString();
     }
 
     private boolean isEndlineChar(char c) {
         return c == '\r' || c == '\n';
     }
 
-    private boolean executeCommand(String command, SocketChannel socketChannel) throws IOException {
-        if (command.isEmpty() || command.equals("bye")) {
+    private boolean handleMessage(String message, SocketChannel socketChannel) throws Exception {
+        if (message.trim().isEmpty()) {
             socketChannel.socket().close();
-            return true;
+            logThreadChannelClosed();
+            throw new Exception("Empty message received.");
         }
 
+        return handleMessageByParts(message.split("\\s+"), socketChannel);
+    }
+
+    private boolean handleMessageByParts(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String messageType = messageParts[0];
+
+        if (messageType.equals(Message.goodbye)) {
+            return handleGoodbyeMessage(socketChannel);
+        }
+
+        if (messageType.equals(Message.getTopics)) {
+            return handleGetTopicsMessage(socketChannel);
+        }
+
+        return true;
+    }
+
+    private boolean handleGoodbyeMessage(SocketChannel socketChannel) throws IOException {
+        socketChannel.socket().close();
+        logThreadChannelClosed();
+        return true;
+    }
+
+    private boolean handleGetTopicsMessage(SocketChannel socketChannel) throws IOException {
+        String response = Json.serializeArrayOfStrings(topics) + '\n';
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
+        socketChannel.write(responseByteBuffer);
+
+        logThreadSent(response);
         return true;
     }
 }
