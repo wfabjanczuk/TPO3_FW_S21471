@@ -1,13 +1,24 @@
 package zad1.serialization;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Json {
-    public static String serializeArrayOfStrings(String[] array) {
+    public static String serializeString(String text) {
+        return '"' + text + '"';
+    }
+
+    public static String unserializeString(String serializedString) {
+        return serializedString.trim().replaceAll("\"", "");
+    }
+
+    public static String serializeStrings(Iterable<? extends CharSequence> strings) {
         return "[\""
-                + String.join("\",\"", array)
+                + String.join("\",\"", strings)
                 + "\"]";
     }
 
-    public static String[] unserializeArrayOfStrings(String serializedArray) {
-        return serializedArray.trim().replaceAll("[\\[\"\\]]", "").split(",");
+    public static List<String> unserializeStrings(String serializedStrings) {
+        return Arrays.asList(serializedStrings.trim().replaceAll("[\\[\"\\]]", "").split(","));
     }
 }

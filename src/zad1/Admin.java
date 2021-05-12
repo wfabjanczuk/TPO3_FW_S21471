@@ -7,8 +7,11 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
 
 public class Admin extends Thread implements LoggableThread {
+    private List<String> topics;
+
     private Socket sock;
     private PrintWriter out;
     private BufferedReader in;
@@ -28,17 +31,30 @@ public class Admin extends Thread implements LoggableThread {
         try {
             out.println(Message.getTopics);
             logThreadSent(Message.getTopics);
-            logThreadReceived(in.readLine());
+            setLocalTopics(in.readLine());
+            showTopics();
 
-            String setTopicsMessage = Message.setTopics + " " + Json.serializeArrayOfStrings(new String[]{"Topic_01", "Topic_02"});
+            String addTopicMessage = Message.addTopic + " " + Json.serializeString("technology");
 
-            out.println(setTopicsMessage);
-            logThreadSent(setTopicsMessage);
+            out.println(addTopicMessage);
+            logThreadSent(addTopicMessage);
             logThreadReceived(in.readLine());
 
             out.println(Message.getTopics);
             logThreadSent(Message.getTopics);
+            setLocalTopics(in.readLine());
+            showTopics();
+
+            String removeTopicMessage = Message.removeTopic + " " + Json.serializeString("food");
+
+            out.println(removeTopicMessage);
+            logThreadSent(removeTopicMessage);
             logThreadReceived(in.readLine());
+
+            out.println(Message.getTopics);
+            logThreadSent(Message.getTopics);
+            setLocalTopics(in.readLine());
+            showTopics();
 
             out.println(Message.goodbye);
             logThreadSent(Message.goodbye);
@@ -47,5 +63,18 @@ public class Admin extends Thread implements LoggableThread {
         } catch (Exception exception) {
             logThreadException(exception);
         }
+    }
+
+    private void setLocalTopics(String response) {
+        logThreadReceived(response);
+        topics = Json.unserializeStrings(response);
+    }
+
+    private void showTopics() {
+        System.out.println("\nLocal topics:");
+        for (String topic : topics) {
+            System.out.println("- " + topic);
+        }
+        System.out.println();
     }
 }

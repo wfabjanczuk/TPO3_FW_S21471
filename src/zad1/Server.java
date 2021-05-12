@@ -13,11 +13,10 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class Server extends Thread implements LoggableThread {
-    private static String[] topics = {"politics", "sport", "celebrities", "food", "technology"};
+    private static List<String> topics = new ArrayList<>(Arrays.asList("politics", "sport", "celebrities", "food"));
     private volatile boolean isServerRunning;
 
     private ServerSocketChannel serverSocketChannel;
@@ -157,8 +156,12 @@ public class Server extends Thread implements LoggableThread {
             return handleGetTopicsMessage(socketChannel);
         }
 
-        if (messageType.equals(Message.setTopics)) {
-            return handleSetTopicsMessage(messageParts, socketChannel);
+        if (messageType.equals(Message.addTopic)) {
+            return handleAddTopicMessage(messageParts, socketChannel);
+        }
+
+        if (messageType.equals(Message.removeTopic)) {
+            return handleRemoveTopicMessage(messageParts, socketChannel);
         }
 
         return true;
@@ -171,7 +174,7 @@ public class Server extends Thread implements LoggableThread {
     }
 
     private boolean handleGetTopicsMessage(SocketChannel socketChannel) throws IOException {
-        String response = Json.serializeArrayOfStrings(topics) + '\n';
+        String response = Json.serializeStrings(topics) + '\n';
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
         socketChannel.write(responseByteBuffer);
 
@@ -179,12 +182,45 @@ public class Server extends Thread implements LoggableThread {
         return true;
     }
 
-    private boolean handleSetTopicsMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
-        topics = Json.unserializeArrayOfStrings(messageParts[1]);
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(Message.setTopicsResponse + '\n'));
+    private boolean handleAddTopicMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String topic = Json.unserializeString(messageParts[1]);
+        String response = addTopic(topic)
+                ? Message.addTopicResponseSuccess
+                : Message.addTopicResponseError;
+
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
         socketChannel.write(responseByteBuffer);
 
-        logThreadSent(Message.setTopicsResponse);
+        logThreadSent(Message.addTopicResponseSuccess);
         return true;
+    }
+
+    private boolean addTopic(String topic) {
+        if (topics.contains(topic)) {
+            return false;
+        }
+
+        return topics.add(topic);
+    }
+
+    private boolean handleRemoveTopicMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String topic = Json.unserializeString(messageParts[1]);
+        String response = removeTopic(topic)
+                ? Message.removeTopicResponseSuccess
+                : Message.removeTopicResponseError;
+
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
+        socketChannel.write(responseByteBuffer);
+
+        logThreadSent(Message.addTopicResponseSuccess);
+        return true;
+    }
+
+    private boolean removeTopic(String topic) {
+        if (topics.contains(topic)) {
+            return topics.remove(topic);
+        }
+
+        return false;
     }
 }
