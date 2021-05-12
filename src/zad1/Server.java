@@ -157,6 +157,10 @@ public class Server extends Thread implements LoggableThread {
             return handleGetTopicsMessage(socketChannel);
         }
 
+        if (messageType.equals(Message.setTopics)) {
+            return handleSetTopicsMessage(messageParts, socketChannel);
+        }
+
         return true;
     }
 
@@ -172,6 +176,15 @@ public class Server extends Thread implements LoggableThread {
         socketChannel.write(responseByteBuffer);
 
         logThreadSent(response);
+        return true;
+    }
+
+    private boolean handleSetTopicsMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        topics = Json.unserializeArrayOfStrings(messageParts[1]);
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(Message.setTopicsResponse + '\n'));
+        socketChannel.write(responseByteBuffer);
+
+        logThreadSent(Message.setTopicsResponse);
         return true;
     }
 }

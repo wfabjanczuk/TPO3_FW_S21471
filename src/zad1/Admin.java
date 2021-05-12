@@ -1,6 +1,7 @@
 package zad1;
 
 import zad1.constant.Message;
+import zad1.serialization.Json;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -25,17 +26,22 @@ public class Admin extends Thread implements LoggableThread {
 
     public void run() {
         try {
-            String getTopicsMessage = Message.getTopics;
+            out.println(Message.getTopics);
+            logThreadSent(Message.getTopics);
+            logThreadReceived(in.readLine());
 
-            out.println(getTopicsMessage);
-            logThreadSent(getTopicsMessage);
+            String setTopicsMessage = Message.setTopics + " " + Json.serializeArrayOfStrings(new String[]{"Topic_01", "Topic_02"});
 
-            String resp = in.readLine();
-            logThreadReceived(resp);
+            out.println(setTopicsMessage);
+            logThreadSent(setTopicsMessage);
+            logThreadReceived(in.readLine());
 
-            String goodbyeMessage = Message.goodbye;
-            out.println(goodbyeMessage);
-            logThreadSent(goodbyeMessage);
+            out.println(Message.getTopics);
+            logThreadSent(Message.getTopics);
+            logThreadReceived(in.readLine());
+
+            out.println(Message.goodbye);
+            logThreadSent(Message.goodbye);
 
             sock.close();
         } catch (Exception exception) {
