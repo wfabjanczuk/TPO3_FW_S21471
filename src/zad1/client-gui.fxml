@@ -37,7 +37,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
@@ -47,45 +46,42 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <Pane layoutX="10.0" layoutY="10.0" prefHeight="180.0" prefWidth="300.0">
+            <Pane layoutX="10.0" layoutY="10.0" prefHeight="110.0" prefWidth="300.0">
                <children>
-                  <Label layoutX="107.0" layoutY="14.0" text="CREATE TOPIC">
+                  <Label layoutX="80.0" text="SUBSCRIBE TO TOPIC">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="topicToCreate" layoutX="93.0" layoutY="79.0" />
-                  <Label layoutX="55.0" layoutY="83.0" text="Name: " />
-                  <Button fx:id="create" layoutX="132.0" layoutY="115.0" mnemonicParsing="false" onAction="#onCreateClicked" text="Create" />
+                  <Button fx:id="subscribe" layoutX="116.0" layoutY="75.0" mnemonicParsing="false" onAction="#onSubscribeClicked" text="Subscribe" />
                </children>
             </Pane>
-            <Pane layoutX="330.0" layoutY="10.0" prefHeight="180.0" prefWidth="300.0">
+            <Pane layoutX="330.0" layoutY="10.0" prefHeight="110.0" prefWidth="300.0">
                <children>
-                  <Label layoutX="109.0" layoutY="14.0" text="DELETE TOPIC">
+                  <Label layoutX="58.0" text="UNSUBSCRIBE FROM TOPIC">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <ChoiceBox fx:id="topicToDelete" layoutX="90.0" layoutY="78.0" prefWidth="150.0" />
-                  <Button fx:id="delete" layoutX="130.0" layoutY="115.0" mnemonicParsing="false" onAction="#onDeleteClicked" text="Delete" />
-                  <Label layoutX="55.0" layoutY="82.0" text="Topic: " />
+                  <ChoiceBox fx:id="topicToUnsubscribe" layoutX="90.0" layoutY="38.0" prefWidth="150.0" />
+                  <Button fx:id="unsubscribe" layoutX="116.0" layoutY="75.0" mnemonicParsing="false" onAction="#onUnsubscribeClicked" text="Unsubscribe" />
+                  <Label layoutX="55.0" layoutY="42.0" text="Topic: " />
                </children>
             </Pane>
-            <Pane layoutX="10.0" layoutY="210.0" prefHeight="180.0" prefWidth="620.0">
+            <Pane layoutX="10.0" layoutY="140.0" prefHeight="250.0" prefWidth="620.0">
                <children>
-                  <Label layoutX="92.0" layoutY="4.0" text="PUBLISH MESSAGE">
+                  <Label layoutX="274.0" text="MESSAGES">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <TextArea fx:id="messageToPublish" layoutX="20.0" layoutY="35.0" prefHeight="135.0" prefWidth="300.0" />
-                  <Button fx:id="publish" layoutX="448.0" layoutY="112.0" mnemonicParsing="false" onAction="#onPublishClicked" text="Publish" />
-                  <ChoiceBox fx:id="topicToPublish" layoutX="410.0" layoutY="75.0" prefWidth="150.0" />
-                  <Label layoutX="375.0" layoutY="79.0" text="Topic: " />
+                  <TextArea fx:id="messages" editable="false" layoutX="10.0" layoutY="30.0" prefHeight="210.0" prefWidth="600.0" />
                </children>
             </Pane>
-            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="200.0" />
-            <Separator layoutY="200.0" prefWidth="640.0" />
+            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="130.0" />
+            <Separator layoutY="130.0" prefWidth="640.0" />
+            <ChoiceBox fx:id="topicToSubscribe" layoutX="90.0" layoutY="48.0" prefWidth="150.0" />
+            <Label layoutX="55.0" layoutY="52.0" text="Topic: " />
          </children>
     </AnchorPane>
   </children>

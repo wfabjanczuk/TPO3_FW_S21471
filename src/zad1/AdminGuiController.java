@@ -11,16 +11,15 @@ public class AdminGuiController {
     public ChoiceBox<String> topicToPublish;
     public TextArea messageToPublish;
 
-    public void onCreateButtonClicked(Event e) {
-        topicToCreate.setText("Created");
+    public void onCreateClicked(Event e) {
+        messageToPublish.setText("Created");
     }
 
-    public void onDeleteButtonClicked(Event e) {
-        topicToDelete.setValue("Deleted");
+    public void onDeleteClicked(Event e) {
+        messageToPublish.setText("Deleted");
     }
 
-    public void onPublishButtonClicked(Event e) {
-        topicToPublish.setValue("Published");
-        messageToPublish.clear();
+    public void onPublishClicked(Event e) {
+        messageToPublish.setText("Published");
     }
 }
