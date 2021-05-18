@@ -1,4 +1,4 @@
-package zad1;
+package zad1.service;
 
 public interface LoggableThread {
 

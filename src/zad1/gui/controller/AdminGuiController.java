@@ -1,4 +1,4 @@
-package zad1;
+package zad1.gui.controller;
 
 import javafx.event.Event;
 import javafx.scene.control.ChoiceBox;

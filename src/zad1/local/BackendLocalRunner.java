@@ -1,13 +1,15 @@
-package zad1;
+package zad1.local;
 
-public class AdminLocalRunner {
+import zad1.service.Server;
+
+public class BackendLocalRunner {
     public static void main(String[] args) {
         try {
             String host = args[0];
             int port = Integer.parseInt(args[1]);
 
-            Admin admin = new Admin(host, port);
-            admin.start();
+            Server server = new Server(host, port);
+            server.start();
         } catch (Exception exc) {
             exc.printStackTrace();
             System.exit(1);

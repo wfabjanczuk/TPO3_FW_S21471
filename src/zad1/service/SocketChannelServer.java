@@ -1,4 +1,4 @@
-package zad1;
+package zad1.service;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
