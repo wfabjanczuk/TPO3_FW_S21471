@@ -1,4 +1,4 @@
-package zad1.service;
+package zad1;
 
 import zad1.constant.Message;
 import zad1.serialization.Json;
@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Server extends SocketChannelServer {
+public class MainServer extends SocketChannelServer {
     private static List<String> topics = new ArrayList<>(Arrays.asList("politics", "sport", "celebrities", "food"));
 
-    public Server(String host, int port) {
+    public MainServer(String host, int port) {
         super(host, port);
     }
 
@@ -33,8 +33,8 @@ public class Server extends SocketChannelServer {
             return handleAddTopicMessage(messageParts, socketChannel);
         }
 
-        if (messageType.equals(Message.removeTopic)) {
-            return handleRemoveTopicMessage(messageParts, socketChannel);
+        if (messageType.equals(Message.deleteTopic)) {
+            return handleDeleteTopicMessage(messageParts, socketChannel);
         }
 
         return true;
@@ -42,7 +42,7 @@ public class Server extends SocketChannelServer {
 
     private boolean handleGoodbyeMessage(SocketChannel socketChannel) throws IOException {
         socketChannel.socket().close();
-        logThreadChannelClosed();
+        logChannelClosed();
         return true;
     }
 
@@ -51,49 +51,51 @@ public class Server extends SocketChannelServer {
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
         socketChannel.write(responseByteBuffer);
 
-        logThreadSent(response);
+        logSent(response);
         return true;
     }
 
     private boolean handleAddTopicMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String topic = Json.unserializeString(messageParts[1]);
-        String response = addTopic(topic)
-                ? Message.addTopicResponseSuccess
-                : Message.addTopicResponseError;
+        String response = addTopic(topic);
 
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
         socketChannel.write(responseByteBuffer);
 
-        logThreadSent(Message.addTopicResponseSuccess);
+        logSent(response);
         return true;
     }
 
-    private boolean addTopic(String topic) {
-        if (topics.contains(topic)) {
-            return false;
+    private String addTopic(String topic) {
+        if (topic.trim().isEmpty()) {
+            return Message.addTopicEmptyError;
         }
 
-        return topics.add(topic);
+        if (topics.contains(topic)) {
+            return Message.addTopicResponseError;
+        }
+
+        topics.add(topic);
+        return Message.addTopicResponseSuccess;
     }
 
-    private boolean handleRemoveTopicMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
+    private boolean handleDeleteTopicMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String topic = Json.unserializeString(messageParts[1]);
-        String response = removeTopic(topic)
-                ? Message.removeTopicResponseSuccess
-                : Message.removeTopicResponseError;
+        String response = deleteTopic(topic);
 
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
         socketChannel.write(responseByteBuffer);
 
-        logThreadSent(Message.addTopicResponseSuccess);
+        logSent(response);
         return true;
     }
 
-    private boolean removeTopic(String topic) {
+    private String deleteTopic(String topic) {
         if (topics.contains(topic)) {
-            return topics.remove(topic);
+            topics.remove(topic);
+            return Message.deleteTopicResponseSuccess;
         }
 
-        return false;
+        return Message.deleteTopicResponseError;
     }
 }

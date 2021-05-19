@@ -7,8 +7,9 @@ public class Message {
     public static String addTopic = "add-topic";
     public static String addTopicResponseSuccess = "Success: Topic has been set";
     public static String addTopicResponseError = "Error: Topic already exists";
+    public static String addTopicEmptyError = "Error: Topic is empty";
 
-    public static String removeTopic = "remove-topic";
-    public static String removeTopicResponseSuccess = "Success: Topic has been removed";
-    public static String removeTopicResponseError = "Error: Topic does not exist";
+    public static String deleteTopic = "delete-topic";
+    public static String deleteTopicResponseSuccess = "Success: Topic has been deleted";
+    public static String deleteTopicResponseError = "Error: Topic does not exist";
 }

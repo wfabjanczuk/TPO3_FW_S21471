@@ -4,19 +4,63 @@ import javafx.event.Event;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
+import zad1.service.AdminService;
+
+import java.util.List;
 
 public class AdminGuiController {
+    private static AdminService adminService;
+
     public TextField topicToCreate;
     public ChoiceBox<String> topicToDelete;
     public ChoiceBox<String> topicToPublish;
     public TextArea messageToPublish;
+    public TextArea topics;
+    public Text createResult;
+    public Text deleteResult;
+    public Text publishResult;
+
+    public void initialize() {
+        refreshTopics();
+    }
+
+    private void refreshTopics() {
+        List<String> topicsList = adminService.getTopics();
+        topics.setText(String.join("\n", topicsList));
+
+        topicToDelete.getItems().clear();
+        topicToDelete.getItems().addAll(topicsList);
+        topicToPublish.getItems().clear();
+        topicToPublish.getItems().addAll(topicsList);
+    }
+
+    public void setAdminService(AdminService adminService) {
+        AdminGuiController.adminService = adminService;
+    }
 
     public void onCreateClicked(Event e) {
-        messageToPublish.setText("Created");
+        String result;
+        try {
+            result = adminService.addTopic(topicToCreate.getText());
+        } catch (Exception exception) {
+            result = "Error in creating the topic";
+        }
+
+        createResult.setText(result);
+        refreshTopics();
     }
 
     public void onDeleteClicked(Event e) {
-        messageToPublish.setText("Deleted");
+        String result;
+        try {
+            result = adminService.deleteTopic(topicToDelete.getValue());
+        } catch (Exception exception) {
+            result = "Error in deleting the topic";
+        }
+
+        deleteResult.setText(result);
+        refreshTopics();
     }
 
     public void onPublishClicked(Event e) {

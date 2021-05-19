@@ -10,10 +10,6 @@ import zad1.gui.controller.ClientGuiController;
 import java.net.URL;
 
 public class ClientGui extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader();
@@ -25,5 +21,9 @@ public class ClientGui extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Client");
         primaryStage.show();
+    }
+
+    public void initialize() {
+        launch();
     }
 }

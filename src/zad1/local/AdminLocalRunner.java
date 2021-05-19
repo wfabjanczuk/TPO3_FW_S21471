@@ -1,6 +1,7 @@
 package zad1.local;
 
-import zad1.service.Admin;
+import zad1.gui.AdminGui;
+import zad1.service.AdminService;
 
 public class AdminLocalRunner {
     public static void main(String[] args) {
@@ -8,8 +9,8 @@ public class AdminLocalRunner {
             String host = args[0];
             int port = Integer.parseInt(args[1]);
 
-            Admin admin = new Admin(host, port);
-            admin.start();
+            AdminGui adminGui = new AdminGui();
+            adminGui.initialize(new AdminService(host, port));
         } catch (Exception exc) {
             exc.printStackTrace();
             System.exit(1);

@@ -1,6 +1,6 @@
 package zad1.local;
 
-import zad1.service.Server;
+import zad1.MainServer;
 
 public class BackendLocalRunner {
     public static void main(String[] args) {
@@ -8,7 +8,7 @@ public class BackendLocalRunner {
             String host = args[0];
             int port = Integer.parseInt(args[1]);
 
-            Server server = new Server(host, port);
+            MainServer server = new MainServer(host, port);
             server.start();
         } catch (Exception exc) {
             exc.printStackTrace();

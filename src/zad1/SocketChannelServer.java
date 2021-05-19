@@ -1,4 +1,6 @@
-package zad1.service;
+package zad1;
+
+import zad1.service.Loggable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Set;
 
-abstract public class SocketChannelServer extends Thread implements LoggableThread {
+abstract public class SocketChannelServer extends Thread implements Loggable {
     abstract protected boolean handleMessageByParts(String[] messageParts, SocketChannel socketChannel) throws IOException;
 
     protected static Charset charset = StandardCharsets.UTF_8;
@@ -33,18 +35,18 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
             selector = Selector.open();
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         } catch (Exception exception) {
-            logThreadException(exception);
-            logThreadCannotInitialize();
-            logThreadCannotStart();
+            logException(exception);
+            logCannotInitialize();
+            logCannotStart();
 
             System.exit(1);
         }
 
-        logThreadInitialized();
+        logInitialized();
     }
 
     public void run() {
-        logThreadStarted();
+        logStarted();
         isServerRunning = true;
 
         while (isServerRunning) {
@@ -62,7 +64,7 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
                     }
                 }
             } catch (Exception exception) {
-                logThreadException(exception);
+                logException(exception);
             }
         }
     }
@@ -91,7 +93,7 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
         SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
         socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
-        logThreadAcceptedConnection();
+        logAcceptedConnection();
 
         return true;
     }
@@ -104,7 +106,7 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
         }
 
         String message = readLine(socketChannel);
-        logThreadReceived(message);
+        logReceived(message);
 
         return handleMessage(message, socketChannel);
     }
@@ -127,7 +129,7 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
                 }
             }
         } catch (Exception exception) {
-            logThreadException(exception);
+            logException(exception);
         }
 
         return requestStringBuilder.toString();
@@ -140,7 +142,7 @@ abstract public class SocketChannelServer extends Thread implements LoggableThre
     protected boolean handleMessage(String message, SocketChannel socketChannel) throws Exception {
         if (message.trim().isEmpty()) {
             socketChannel.socket().close();
-            logThreadChannelClosed();
+            logChannelClosed();
             throw new Exception("Empty message received.");
         }
 
