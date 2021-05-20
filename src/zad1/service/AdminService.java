@@ -101,4 +101,16 @@ public class AdminService implements Loggable {
 
         return result;
     }
+
+    public String publishMessage(String message, String topic) throws IOException {
+        String publishMessage = Message.publish + " " + Json.serializeStrings(message, topic);
+
+        printWriter.println(publishMessage);
+        logSent(publishMessage);
+
+        String result = bufferedReader.readLine();
+        logReceived(result);
+
+        return result;
+    }
 }

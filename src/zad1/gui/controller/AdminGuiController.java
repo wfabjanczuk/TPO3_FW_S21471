@@ -31,6 +31,7 @@ public class AdminGuiController {
 
         topicToDelete.getItems().clear();
         topicToDelete.getItems().addAll(topicsList);
+
         topicToPublish.getItems().clear();
         topicToPublish.getItems().addAll(topicsList);
     }
@@ -64,6 +65,14 @@ public class AdminGuiController {
     }
 
     public void onPublishClicked(Event e) {
-        messageToPublish.setText("Published");
+        String result;
+        try {
+            result = adminService.publishMessage(messageToPublish.getText(), topicToPublish.getValue());
+        } catch (Exception exception) {
+            result = "Error in publishing the message";
+        }
+
+        publishResult.setText(result);
+        refreshTopics();
     }
 }

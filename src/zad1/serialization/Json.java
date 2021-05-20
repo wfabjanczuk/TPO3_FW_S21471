@@ -12,6 +12,12 @@ public class Json {
         return serializedString.trim().replaceAll("\"", "");
     }
 
+    public static String serializeStrings(String ...strings) {
+        return "[\""
+                + String.join("\",\"", strings)
+                + "\"]";
+    }
+
     public static String serializeStrings(Iterable<? extends CharSequence> strings) {
         return "[\""
                 + String.join("\",\"", strings)

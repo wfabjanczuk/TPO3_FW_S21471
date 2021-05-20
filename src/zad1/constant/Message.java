@@ -12,4 +12,7 @@ public class Message {
     public static String deleteTopic = "delete-topic";
     public static String deleteTopicResponseSuccess = "Success: Topic has been deleted";
     public static String deleteTopicResponseError = "Error: Topic does not exist";
+
+    public static String publish = "publish";
+    public static String publishResponseSuccess = "Success: Message has been published";
 }

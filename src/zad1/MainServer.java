@@ -37,6 +37,10 @@ public class MainServer extends SocketChannelServer {
             return handleDeleteTopicMessage(messageParts, socketChannel);
         }
 
+        if (messageType.equals(Message.publish)) {
+            return handlePublishMessage(messageParts, socketChannel);
+        }
+
         return true;
     }
 
@@ -97,5 +101,15 @@ public class MainServer extends SocketChannelServer {
         }
 
         return Message.deleteTopicResponseError;
+    }
+
+    private boolean handlePublishMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String response = Message.publishResponseSuccess;
+
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
+        socketChannel.write(responseByteBuffer);
+
+        logSent(response);
+        return true;
     }
 }
