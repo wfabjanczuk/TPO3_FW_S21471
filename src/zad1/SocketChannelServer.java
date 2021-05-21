@@ -142,7 +142,7 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
     protected boolean handleMessage(String message, SocketChannel socketChannel) throws Exception {
         if (message.trim().isEmpty()) {
             socketChannel.socket().close();
-            logChannelClosed();
+            logConnectionClosed();
             throw new Exception("Empty message received.");
         }
 

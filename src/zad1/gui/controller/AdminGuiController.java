@@ -75,4 +75,8 @@ public class AdminGuiController {
         publishResult.setText(result);
         refreshTopics();
     }
+
+    public void closeResources() {
+        adminService.closeResources();
+    }
 }

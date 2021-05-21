@@ -35,4 +35,9 @@ public class AdminGui extends Application {
         adminGuiController.setAdminService(adminService);
         launch();
     }
+
+    @Override
+    public void stop() {
+        adminGuiController.closeResources();
+    }
 }

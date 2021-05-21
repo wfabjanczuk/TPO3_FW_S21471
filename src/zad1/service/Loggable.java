@@ -31,8 +31,12 @@ public interface Loggable {
         System.out.println(getLabel() + " new connection accepted.");
     }
 
-    default void logChannelClosed() {
-        System.out.println(getLabel() + " channel closed.");
+    default void logConnectionResourcesClosed() {
+        System.out.println(getLabel() + " connection resources closed.");
+    }
+
+    default void logConnectionClosed() {
+        System.out.println(getLabel() + " connection closed.");
     }
 
     default void logReceived(String message) {

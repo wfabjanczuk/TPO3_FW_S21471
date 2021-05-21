@@ -27,42 +27,6 @@ public class AdminService implements Loggable {
         }
     }
 
-//    public void run() {
-//        try {
-//            printWriter.println(Message.getTopics);
-//            logSent(Message.getTopics);
-//            setLocalTopics(bufferedReader.readLine());
-//            showTopics();
-//
-//            String addTopicMessage = Message.addTopic + " " + Json.serializeString("technology");
-//
-//            printWriter.println(addTopicMessage);
-//            logSent(addTopicMessage);
-//            logReceived(bufferedReader.readLine());
-//
-//            printWriter.println(Message.getTopics);
-//            logSent(Message.getTopics);
-//            setLocalTopics(bufferedReader.readLine());
-//            showTopics();
-//
-//            String removeTopicMessage = Message.removeTopic + " " + Json.serializeString("food");
-//
-
-//
-//            printWriter.println(Message.getTopics);
-//            logSent(Message.getTopics);
-//            setLocalTopics(bufferedReader.readLine());
-//            showTopics();
-//
-//            printWriter.println(Message.goodbye);
-//            logSent(Message.goodbye);
-//
-//            socket.close();
-//        } catch (Exception exception) {
-//            logException(exception);
-//        }
-//    }
-
     public List<String> getTopics() {
         printWriter.println(Message.getTopics);
         logSent(Message.getTopics);
@@ -112,5 +76,20 @@ public class AdminService implements Loggable {
         logReceived(result);
 
         return result;
+    }
+
+    public void closeResources() {
+        try {
+            if (socket != null) {
+                printWriter.println(Message.goodbye);
+                logSent(Message.goodbye);
+                socket.close();
+            }
+
+            logConnectionResourcesClosed();
+            logConnectionClosed();
+        } catch (IOException exception) {
+            logException(exception);
+        }
     }
 }

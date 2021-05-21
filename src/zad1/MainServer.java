@@ -46,7 +46,7 @@ public class MainServer extends SocketChannelServer {
 
     private boolean handleGoodbyeMessage(SocketChannel socketChannel) throws IOException {
         socketChannel.socket().close();
-        logChannelClosed();
+        logConnectionClosed();
         return true;
     }
 
