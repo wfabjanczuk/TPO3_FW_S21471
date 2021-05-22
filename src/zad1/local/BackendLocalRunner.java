@@ -1,6 +1,6 @@
 package zad1.local;
 
-import zad1.MainServer;
+import zad1.socket.server.MainServer;
 
 public class BackendLocalRunner {
     public static void main(String[] args) {

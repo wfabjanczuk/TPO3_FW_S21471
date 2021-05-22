@@ -1,7 +1,7 @@
 package zad1.local;
 
 import zad1.gui.AdminGui;
-import zad1.service.AdminService;
+import zad1.socket.service.AdminService;
 
 public class AdminLocalRunner {
     public static void main(String[] args) {

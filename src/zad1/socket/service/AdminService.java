@@ -1,5 +1,6 @@
-package zad1.service;
+package zad1.socket.service;
 
+import zad1.socket.Loggable;
 import zad1.constant.Message;
 import zad1.serialization.Json;
 
@@ -81,8 +82,8 @@ public class AdminService implements Loggable {
     public void closeResources() {
         try {
             if (socket != null) {
-                printWriter.println(Message.goodbye);
-                logSent(Message.goodbye);
+                printWriter.println(Message.goodbyeFromAdmin);
+                logSent(Message.goodbyeFromAdmin);
                 socket.close();
             }
 

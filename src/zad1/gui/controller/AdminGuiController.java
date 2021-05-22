@@ -5,12 +5,12 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import zad1.service.AdminService;
+import zad1.socket.service.AdminService;
 
 import java.util.List;
 
 public class AdminGuiController {
-    private static AdminService adminService;
+    private AdminService adminService;
 
     public TextField topicToCreate;
     public ChoiceBox<String> topicToDelete;
@@ -37,7 +37,7 @@ public class AdminGuiController {
     }
 
     public void setAdminService(AdminService adminService) {
-        AdminGuiController.adminService = adminService;
+        this.adminService = adminService;
     }
 
     public void onCreateClicked(Event e) {

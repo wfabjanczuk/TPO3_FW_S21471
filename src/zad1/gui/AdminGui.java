@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import zad1.gui.controller.AdminGuiController;
-import zad1.service.AdminService;
+import zad1.socket.service.AdminService;
 
 import java.net.URL;
 

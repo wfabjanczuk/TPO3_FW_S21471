@@ -1,28 +1,31 @@
-package zad1;
+package zad1.socket.server;
 
 import zad1.constant.Message;
+import zad1.constant.Topic;
 import zad1.serialization.Json;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainServer extends SocketChannelServer {
-    private static List<String> topics = new ArrayList<>(Arrays.asList("politics", "sport", "celebrities", "food"));
+    private static List<String> topics = new LinkedList<>(Arrays.asList(Topic.defaultTopics));
 
     public MainServer(String host, int port) {
         super(host, port);
     }
 
+    @Override
     protected boolean handleMessageByParts(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String messageType = messageParts[0];
 
-        if (messageType.equals(Message.goodbye)) {
-            return handleGoodbyeMessage(socketChannel);
+        if (messageType.equals(Message.goodbyeFromAdmin)) {
+            return handleGoodbyeFromAdminMessage(socketChannel);
         }
 
         if (messageType.equals(Message.getTopics)) {
@@ -44,7 +47,7 @@ public class MainServer extends SocketChannelServer {
         return true;
     }
 
-    private boolean handleGoodbyeMessage(SocketChannel socketChannel) throws IOException {
+    private boolean handleGoodbyeFromAdminMessage(SocketChannel socketChannel) throws IOException {
         socketChannel.socket().close();
         logConnectionClosed();
         return true;
@@ -110,6 +113,11 @@ public class MainServer extends SocketChannelServer {
         socketChannel.write(responseByteBuffer);
 
         logSent(response);
+        return true;
+    }
+
+    @Override
+    protected boolean executeWrite(SelectionKey selectionKey) {
         return true;
     }
 }

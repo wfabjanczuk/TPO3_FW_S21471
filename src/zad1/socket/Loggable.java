@@ -1,4 +1,4 @@
-package zad1.service;
+package zad1.socket;
 
 public interface Loggable {
 

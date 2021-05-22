@@ -1,6 +1,6 @@
-package zad1;
+package zad1.socket.server;
 
-import zad1.service.Loggable;
+import zad1.socket.Loggable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,13 +18,16 @@ import java.util.Set;
 abstract public class SocketChannelServer extends Thread implements Loggable {
     abstract protected boolean handleMessageByParts(String[] messageParts, SocketChannel socketChannel) throws IOException;
 
-    protected static Charset charset = StandardCharsets.UTF_8;
-    private static final int bufferSize = 1024;
+    abstract protected boolean executeWrite(SelectionKey selectionKey);
 
-    private volatile boolean isServerRunning;
-    private ServerSocketChannel serverSocketChannel;
-    private Selector selector;
-    private ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
+    protected static Charset charset = StandardCharsets.UTF_8;
+    protected volatile boolean isServerRunning;
+
+    protected Selector selector;
+    protected ServerSocketChannel serverSocketChannel;
+
+    private static final int bufferSize = 1024;
+    private final ByteBuffer byteBuffer = ByteBuffer.allocate(bufferSize);
 
     public SocketChannelServer(String host, int port) {
         try {
@@ -50,22 +53,26 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
         isServerRunning = true;
 
         while (isServerRunning) {
-            try {
-                selector.select();
-                Set<SelectionKey> selectionKeys = selector.selectedKeys();
-                Iterator<SelectionKey> selectionKeysIterator = selectionKeys.iterator();
+            serveSelector();
+        }
+    }
 
-                while (selectionKeysIterator.hasNext()) {
-                    SelectionKey selectionKey = selectionKeysIterator.next();
-                    selectionKeysIterator.remove();
+    protected void serveSelector() {
+        try {
+            selector.select();
+            Set<SelectionKey> selectionKeys = selector.selectedKeys();
+            Iterator<SelectionKey> selectionKeysIterator = selectionKeys.iterator();
 
-                    if (!serveSelectionKey(selectionKey)) {
-                        throw new Exception("SelectionKey could not be served.");
-                    }
+            while (selectionKeysIterator.hasNext()) {
+                SelectionKey selectionKey = selectionKeysIterator.next();
+                selectionKeysIterator.remove();
+
+                if (!serveSelectionKey(selectionKey)) {
+                    throw new Exception("SelectionKey could not be served.");
                 }
-            } catch (Exception exception) {
-                logException(exception);
             }
+        } catch (Exception exception) {
+            logException(exception);
         }
     }
 
@@ -147,9 +154,5 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
         }
 
         return handleMessageByParts(message.split("\\s+"), socketChannel);
-    }
-
-    protected boolean executeWrite(SelectionKey selectionKey) {
-        return true;
     }
 }
