@@ -44,7 +44,7 @@ public class MainServer extends SocketChannelServer {
             return handlePublishMessage(messageParts, socketChannel);
         }
 
-        return true;
+        return false;
     }
 
     private boolean handleGoodbyeFromAdminMessage(SocketChannel socketChannel) throws IOException {
@@ -113,11 +113,6 @@ public class MainServer extends SocketChannelServer {
         socketChannel.write(responseByteBuffer);
 
         logSent(response);
-        return true;
-    }
-
-    @Override
-    protected boolean executeWrite(SelectionKey selectionKey) {
         return true;
     }
 }

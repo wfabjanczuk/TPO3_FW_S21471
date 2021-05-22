@@ -36,11 +36,19 @@ public class AdminGuiController {
         topicToPublish.getItems().addAll(topicsList);
     }
 
+    private void clearResults() {
+        createResult.setText(null);
+        deleteResult.setText(null);
+        publishResult.setText(null);
+    }
+
     public void setAdminService(AdminService adminService) {
         this.adminService = adminService;
     }
 
     public void onCreateClicked(Event e) {
+        clearResults();
+
         String result;
         try {
             result = adminService.addTopic(topicToCreate.getText());
@@ -49,10 +57,13 @@ public class AdminGuiController {
         }
 
         createResult.setText(result);
+        topicToCreate.clear();
         refreshTopics();
     }
 
     public void onDeleteClicked(Event e) {
+        clearResults();
+
         String result;
         try {
             result = adminService.deleteTopic(topicToDelete.getValue());
@@ -65,6 +76,8 @@ public class AdminGuiController {
     }
 
     public void onPublishClicked(Event e) {
+        clearResults();
+
         String result;
         try {
             result = adminService.publishMessage(messageToPublish.getText(), topicToPublish.getValue());
@@ -72,6 +85,7 @@ public class AdminGuiController {
             result = "Error in publishing the message";
         }
 
+        messageToPublish.clear();
         publishResult.setText(result);
         refreshTopics();
     }

@@ -18,8 +18,6 @@ import java.util.Set;
 abstract public class SocketChannelServer extends Thread implements Loggable {
     abstract protected boolean handleMessageByParts(String[] messageParts, SocketChannel socketChannel) throws IOException;
 
-    abstract protected boolean executeWrite(SelectionKey selectionKey);
-
     protected static Charset charset = StandardCharsets.UTF_8;
     protected volatile boolean isServerRunning;
 
@@ -89,17 +87,13 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
             return executeRead(selectionKey);
         }
 
-        if (selectionKey.isWritable()) {
-            return executeWrite(selectionKey);
-        }
-
         return false;
     }
 
     protected boolean executeAccept() throws IOException {
         SocketChannel socketChannel = serverSocketChannel.accept();
         socketChannel.configureBlocking(false);
-        socketChannel.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+        socketChannel.register(selector, SelectionKey.OP_READ);
         logAcceptedConnection();
 
         return true;
