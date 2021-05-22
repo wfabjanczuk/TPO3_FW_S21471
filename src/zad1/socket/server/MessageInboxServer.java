@@ -7,10 +7,22 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 public class MessageInboxServer extends SocketChannelServer {
+    private final String host;
+    private final int port;
     private TextArea messagesTextArea;
 
     public MessageInboxServer(String host, int port) {
         super(host, port);
+        this.host = host;
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 
     public void setMessagesTextArea(TextArea messagesTextArea) {

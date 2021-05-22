@@ -8,14 +8,29 @@ public class Message {
     public static String getTopics = "get-topics";
 
     public static String addTopic = "add-topic";
-    public static String addTopicResponseSuccess = "Success: Topic has been set";
-    public static String addTopicResponseError = "Error: Topic already exists";
+    public static String addTopicSuccess = "Success: Topic has been set";
+    public static String addTopicExistsError = "Error: Topic already exists";
     public static String addTopicEmptyError = "Error: Topic is empty";
 
     public static String deleteTopic = "delete-topic";
-    public static String deleteTopicResponseSuccess = "Success: Topic has been deleted";
-    public static String deleteTopicResponseError = "Error: Topic does not exist";
+    public static String deleteTopicSuccess = "Success: Topic has been deleted";
+    public static String deleteTopicNotExistsError = "Error: Topic does not exist";
 
     public static String publish = "publish";
-    public static String publishResponseSuccess = "Success: Message has been published";
+    public static String publishSuccess = "Success: Message has been published";
+
+    public static String registerMessageInbox = "register-message-inbox";
+    public static String registerMessageInboxSuccess = "Success: MessageInbox has been registered";
+    public static String registerMessageInboxError = "Error: MessageInbox could not be registered";
+
+    public static String subscribeToTopic = "subscribe-to-topic";
+    public static String subscribeToTopicSuccess = "Success: Topic subscribed";
+    public static String subscribeToTopicSubscribedError = "Error: Topic was already subscribed";
+    public static String subscribeToTopicEmptyError = "Error: Topic is empty";
+    public static String subscribeToTopicNotExistsError = "Error: Topic does not exist";
+
+    public static String unsubscribeFromTopic = "unsubscribe-from-topic";
+    public static String unsubscribeFromTopicSuccess = "Success: Topic unsubscribed";
+    public static String unsubscribeFromTopicNotSubscribedError = "Error: Topic was not subscribed";
+    public static String unsubscribeFromTopicNotExistsError = "Error: Topic does not exist";
 }
