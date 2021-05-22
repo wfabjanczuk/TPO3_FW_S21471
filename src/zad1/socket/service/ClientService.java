@@ -4,13 +4,17 @@ import zad1.constant.Message;
 import zad1.serialization.Json;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
-public class AdminService extends TopicService {
-    public AdminService(String host, int port) {
+public class ClientService extends TopicService {
+    public List<String> subscribedTopics = new LinkedList<>();
+
+    public ClientService(String host, int port) {
         super(host, port);
     }
 
-    public String addTopic(String topic) throws IOException {
+    public String subscribeToTopic(String topic) throws IOException {
         String addTopicMessage = Message.addTopic + " " + Json.serializeString(topic);
 
         printWriter.println(addTopicMessage);
@@ -22,7 +26,7 @@ public class AdminService extends TopicService {
         return result;
     }
 
-    public String deleteTopic(String topic) throws IOException {
+    public String unsubscribeFromTopic(String topic) throws IOException {
         String deleteTopicMessage = Message.deleteTopic + " " + Json.serializeString(topic);
 
         printWriter.println(deleteTopicMessage);
@@ -34,23 +38,11 @@ public class AdminService extends TopicService {
         return result;
     }
 
-    public String publishMessage(String message, String topic) throws IOException {
-        String publishMessage = Message.publish + " " + Json.serializeStrings(message, topic);
-
-        printWriter.println(publishMessage);
-        logSent(publishMessage);
-
-        String result = bufferedReader.readLine();
-        logReceived(result);
-
-        return result;
-    }
-
     @Override
     protected void sayGoodbye() {
         try {
-            printWriter.println(Message.goodbyeFromAdmin);
-            logSent(Message.goodbyeFromAdmin);
+            printWriter.println(Message.goodbyeFromClient);
+            logSent(Message.goodbyeFromClient);
         } catch (Exception exception) {
             logException(exception);
         }

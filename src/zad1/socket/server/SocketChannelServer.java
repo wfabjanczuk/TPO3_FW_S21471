@@ -53,6 +53,8 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
         while (isServerRunning) {
             serveSelector();
         }
+
+        closeResources();
     }
 
     protected void serveSelector() {
@@ -148,5 +150,16 @@ abstract public class SocketChannelServer extends Thread implements Loggable {
         }
 
         return handleMessageByParts(message.split("\\s+"), socketChannel);
+    }
+
+    public void closeResources() {
+        try {
+            selector.close();
+            serverSocketChannel.close();
+
+            logResourcesClosed();
+        } catch (Exception exception) {
+            logException(exception);
+        }
     }
 }

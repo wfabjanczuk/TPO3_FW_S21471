@@ -1,8 +1,9 @@
 package zad1.constant;
 
 public class Message {
-    public static String goodbyeFromAdmin = "bye-from-admin";
-    public static String goodbyeFromMainServer = "bye-from-main-server";
+    public static String goodbyeFromAdmin = "goodbye-from-admin";
+    public static String goodbyeFromMainServer = "goodbye-from-main-server";
+    public static String goodbyeFromClient = "goodbye-from-client";
 
     public static String getTopics = "get-topics";
 

@@ -46,26 +46,38 @@
   <children>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <Pane layoutX="10.0" layoutY="10.0" prefHeight="110.0" prefWidth="300.0">
+            <Pane layoutX="10.0" layoutY="10.0" prefHeight="110.0" prefWidth="140.0">
                <children>
-                  <Label layoutX="80.0" text="SUBSCRIBE TO TOPIC">
+                  <Label layoutX="14.0" text="REFRESH TOPICS">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Button fx:id="subscribe" layoutX="116.0" layoutY="75.0" mnemonicParsing="false" onAction="#onSubscribeClicked" text="Subscribe" />
+                  <Button fx:id="refresh" layoutX="42.0" layoutY="45.0" mnemonicParsing="false" onAction="#onRefreshClicked" text="Refresh" />
                </children>
             </Pane>
-            <Pane layoutX="330.0" layoutY="10.0" prefHeight="110.0" prefWidth="300.0">
+            <Pane layoutX="170.0" layoutY="10.0" prefHeight="110.0" prefWidth="220.0">
                <children>
-                  <Label layoutX="58.0" text="UNSUBSCRIBE FROM TOPIC">
+                  <Label layoutX="40.0" text="SUBSCRIBE TO TOPIC">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <ChoiceBox fx:id="topicToUnsubscribe" layoutX="90.0" layoutY="38.0" prefWidth="150.0" />
-                  <Button fx:id="unsubscribe" layoutX="116.0" layoutY="75.0" mnemonicParsing="false" onAction="#onUnsubscribeClicked" text="Unsubscribe" />
-                  <Label layoutX="55.0" layoutY="42.0" text="Topic: " />
+                  <Button fx:id="subscribe" layoutX="76.0" layoutY="75.0" mnemonicParsing="false" onAction="#onSubscribeClicked" text="Subscribe" />
+                  <ChoiceBox fx:id="topicToSubscribe" layoutX="50.0" layoutY="38.0" prefWidth="150.0" />
+                  <Label layoutX="15.0" layoutY="42.0" text="Topic: " />
+               </children>
+            </Pane>
+            <Pane layoutX="410.0" layoutY="10.0" prefHeight="110.0" prefWidth="220.0">
+               <children>
+                  <Label layoutX="18.0" text="UNSUBSCRIBE FROM TOPIC">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="topicToUnsubscribe" layoutX="50.0" layoutY="38.0" prefWidth="150.0" />
+                  <Button fx:id="unsubscribe" layoutX="76.0" layoutY="75.0" mnemonicParsing="false" onAction="#onUnsubscribeClicked" text="Unsubscribe" />
+                  <Label layoutX="15.0" layoutY="42.0" text="Topic: " />
                </children>
             </Pane>
             <Pane layoutX="10.0" layoutY="140.0" prefHeight="250.0" prefWidth="620.0">
@@ -78,10 +90,9 @@
                   <TextArea fx:id="messages" editable="false" layoutX="10.0" layoutY="30.0" prefHeight="210.0" prefWidth="600.0" />
                </children>
             </Pane>
-            <Separator layoutX="320.0" orientation="VERTICAL" prefHeight="130.0" />
+            <Separator layoutX="400.0" orientation="VERTICAL" prefHeight="130.0" />
             <Separator layoutY="130.0" prefWidth="640.0" />
-            <ChoiceBox fx:id="topicToSubscribe" layoutX="90.0" layoutY="48.0" prefWidth="150.0" />
-            <Label layoutX="55.0" layoutY="52.0" text="Topic: " />
+            <Separator layoutX="160.0" orientation="VERTICAL" prefHeight="130.0" />
          </children>
     </AnchorPane>
   </children>

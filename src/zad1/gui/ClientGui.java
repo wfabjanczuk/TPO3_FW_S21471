@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import zad1.gui.controller.ClientGuiController;
 import zad1.socket.server.MessageInboxServer;
+import zad1.socket.service.ClientService;
 
 import java.net.URL;
 
@@ -26,9 +27,15 @@ public class ClientGui extends Application {
         primaryStage.show();
     }
 
-    public void initialize(MessageInboxServer messageInboxServer) {
+    public void initialize(ClientService clientService, MessageInboxServer messageInboxServer) {
         clientGuiController = new ClientGuiController();
+        clientGuiController.setClientService(clientService);
         clientGuiController.setMessageInboxServer(messageInboxServer);
         launch();
+    }
+
+    @Override
+    public void stop() {
+        clientGuiController.closeResources();
     }
 }

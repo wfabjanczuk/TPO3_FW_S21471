@@ -19,6 +19,10 @@ public interface Loggable {
         System.out.println(getLabel() + " started.");
     }
 
+    default void logResourcesClosed() {
+        System.out.println(getLabel() + " resources closed.");
+    }
+
     default void logCannotInitialize() {
         System.out.println(getLabel() + " cannot initialize.");
     }
