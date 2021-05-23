@@ -35,7 +35,7 @@ public class ClientGuiController {
         } catch (Exception exception) {
             result = "Error in registering message inbox";
         }
-        messages.appendText(result);
+        messages.appendText(result + "\n");
     }
 
     public void initialize() {
@@ -45,6 +45,8 @@ public class ClientGuiController {
 
         registerMessageInbox();
         refreshTopics();
+
+        messageInboxServer.start();
     }
 
     public void onRefreshClicked(Event e) {
@@ -89,7 +91,8 @@ public class ClientGuiController {
     }
 
     public void closeResources() {
-        clientService.closeResources();
+        messageInboxServer.stopServer();
         messageInboxServer.closeResources();
+        clientService.closeResources();
     }
 }

@@ -19,10 +19,10 @@ public class Message {
 
     public static String publish = "publish";
     public static String publishSuccess = "Success: Message has been published";
+    public static String publishReceived = "Success: Message has been received";
 
     public static String registerMessageInbox = "register-message-inbox";
     public static String registerMessageInboxSuccess = "Success: MessageInbox has been registered";
-    public static String registerMessageInboxError = "Error: MessageInbox could not be registered";
 
     public static String subscribeToTopic = "subscribe-to-topic";
     public static String subscribeToTopicSuccess = "Success: Topic subscribed";

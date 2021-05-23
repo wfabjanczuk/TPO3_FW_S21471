@@ -87,7 +87,6 @@ public class AdminGuiController {
 
         messageToPublish.clear();
         publishResult.setText(result);
-        refreshTopics();
     }
 
     public void closeResources() {

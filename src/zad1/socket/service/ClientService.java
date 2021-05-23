@@ -7,7 +7,7 @@ import zad1.serialization.Json;
 import java.io.IOException;
 import java.util.List;
 
-public class ClientService extends TopicService {
+public class ClientService extends Service {
     private ChoiceBox<String> topicToSubscribeChoiceBox;
     private ChoiceBox<String> topicToUnsubscribeChoiceBox;
 

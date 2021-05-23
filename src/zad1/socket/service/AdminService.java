@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminService extends TopicService {
+public class AdminService extends Service {
     public AdminService(String host, int port) {
         super(host, port);
     }

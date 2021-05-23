@@ -2,9 +2,12 @@ package zad1.socket.server;
 
 import javafx.scene.control.TextArea;
 import zad1.constant.Message;
+import zad1.serialization.Json;
 
 import java.io.IOException;
+import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 
 public class MessageInboxServer extends SocketChannelServer {
     private final String host;
@@ -38,15 +41,29 @@ public class MessageInboxServer extends SocketChannelServer {
         }
 
         if (messageType.equals(Message.publish)) {
-            return handlePublish(messageParts);
+            return handlePublish(messageParts, socketChannel);
         }
 
         return false;
     }
 
-    private boolean handlePublish(String[] messageParts) {
-        messagesTextArea.appendText(messageParts[1] + "\n");
+    private boolean handlePublish(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String response = showReceivedMessage(messageParts);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
+
+        logSent(response);
         return true;
+    }
+
+    private String showReceivedMessage(String[] messageParts) {
+        List<String> messageAndTopic = Json.unserializeStrings(messageParts[1]);
+
+        String message = messageAndTopic.get(0);
+        String topic = messageAndTopic.get(1);
+
+        messagesTextArea.appendText(topic + ": " + message + "\n");
+
+        return Message.publishReceived;
     }
 
     private boolean handleGoodbyeFromMainServerMessage(SocketChannel socketChannel) throws IOException {

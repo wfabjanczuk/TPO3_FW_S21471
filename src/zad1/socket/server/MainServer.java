@@ -3,9 +3,9 @@ package zad1.socket.server;
 import zad1.constant.Message;
 import zad1.constant.Topic;
 import zad1.serialization.Json;
+import zad1.socket.service.SubscriptionService;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
@@ -16,7 +16,7 @@ public class MainServer extends SocketChannelServer {
     private static final List<String> topics = new LinkedList<>(Arrays.asList(Topic.defaultTopics));
 
     private static final Map<String, List<String>> topicsInboxesMap = new LinkedHashMap<>();
-    private static final Map<String, Socket> inboxesSocketsMap = new LinkedHashMap<>();
+    private static final Map<String, SubscriptionService> inboxesSubscriptionsMap = new LinkedHashMap<>();
     private static final Map<String, String> clientsInboxesMap = new LinkedHashMap<>();
 
     public MainServer(String host, int port) {
@@ -81,7 +81,7 @@ public class MainServer extends SocketChannelServer {
         String messageInboxConnectionString = clientsInboxesMap.get(clientServiceConnectionString);
 
         removeInboxFromTopics(messageInboxConnectionString);
-        inboxesSocketsMap.remove(messageInboxConnectionString);
+        inboxesSubscriptionsMap.remove(messageInboxConnectionString);
         clientsInboxesMap.remove(clientServiceConnectionString);
 
         socketChannel.socket().close();
@@ -104,7 +104,7 @@ public class MainServer extends SocketChannelServer {
     }
 
     private boolean handleGetTopicsForAdminMessage(SocketChannel socketChannel) throws IOException {
-        String response = Json.serializeStrings(topics) + '\n';
+        String response = Json.serializeStrings(topics) + "\n";
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
         socketChannel.write(responseByteBuffer);
 
@@ -122,7 +122,7 @@ public class MainServer extends SocketChannelServer {
 
         String response = Json.serializeStrings(topics.stream().filter(
                 t -> !clientTopics.contains(t)
-        ).collect(Collectors.toList())) + " " + Json.serializeStrings(clientTopics) + '\n';
+        ).collect(Collectors.toList())) + " " + Json.serializeStrings(clientTopics) + "\n";
 
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
         socketChannel.write(responseByteBuffer);
@@ -135,8 +135,7 @@ public class MainServer extends SocketChannelServer {
         String topic = Json.unserializeString(messageParts[1]);
         String response = addTopic(topic);
 
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
@@ -159,8 +158,7 @@ public class MainServer extends SocketChannelServer {
         String topic = Json.unserializeString(messageParts[1]);
         String response = deleteTopic(topic);
 
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
@@ -177,33 +175,44 @@ public class MainServer extends SocketChannelServer {
     }
 
     private boolean handlePublishMessage(String[] messageParts, SocketChannel socketChannel) throws IOException {
-        String response = Message.publishSuccess;
-
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        String response = publishMessage(messageParts);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
+    }
+
+    private String publishMessage(String[] messageParts) {
+        String topic = Json.unserializeStrings(messageParts[1]).get(1);
+
+        topicsInboxesMap.get(topic).forEach(inbox -> {
+            try {
+                String result = inboxesSubscriptionsMap.get(inbox).forwardMessage(String.join(" ", messageParts));
+                logReceived(result);
+            } catch (IOException exception) {
+                logException(exception);
+            }
+        });
+
+        return Message.publishSuccess;
     }
 
     private boolean handleRegisterMessageInbox(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String response = registerMessageInbox(messageParts, socketChannel);
-
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
     }
 
-    private String registerMessageInbox(String[] messageParts, SocketChannel socketChannel) throws IOException {
+    private String registerMessageInbox(String[] messageParts, SocketChannel socketChannel) {
         String clientServiceConnectionString = getClientConnectionString(socketChannel);
 
         List<String> hostPort = Json.unserializeStrings(messageParts[1]);
         String messageInboxConnectionString = String.join(":", hostPort);
 
         clientsInboxesMap.put(clientServiceConnectionString, messageInboxConnectionString);
-        inboxesSocketsMap.put(messageInboxConnectionString, new Socket(
+        inboxesSubscriptionsMap.put(messageInboxConnectionString, new SubscriptionService(
                 hostPort.get(0),
                 Integer.parseInt(hostPort.get(1)))
         );
@@ -213,9 +222,7 @@ public class MainServer extends SocketChannelServer {
 
     private boolean handleSubscribe(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String response = subscribeToTopic(messageParts, socketChannel);
-
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
@@ -251,9 +258,7 @@ public class MainServer extends SocketChannelServer {
 
     private boolean handleUnsubscribe(String[] messageParts, SocketChannel socketChannel) throws IOException {
         String response = unsubscribeFromTopic(messageParts, socketChannel);
-
-        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
-        socketChannel.write(responseByteBuffer);
+        socketChannel.write(charset.encode(CharBuffer.wrap(response + "\n")));
 
         logSent(response);
         return true;
@@ -295,7 +300,7 @@ public class MainServer extends SocketChannelServer {
             }
         }
 
-        for (Map.Entry<String, Socket> inboxesSocketsEntry : inboxesSocketsMap.entrySet()) {
+        for (Map.Entry<String, SubscriptionService> inboxesSocketsEntry : inboxesSubscriptionsMap.entrySet()) {
             System.out.println("\nSocket for inbox: " + inboxesSocketsEntry.getKey());
             System.out.println(inboxesSocketsEntry.getValue().getInetAddress().getHostAddress() + ":" + inboxesSocketsEntry.getValue().getPort());
         }
