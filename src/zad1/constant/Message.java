@@ -19,6 +19,8 @@ public class Message {
 
     public static String publish = "publish";
     public static String publishSuccess = "Success: Message has been published";
+    public static String publishEmptyError = "Error: Message is empty";
+    public static String publishNoSubscribersWarning = "Warning: Topic is subscribed by no one";
     public static String publishReceived = "Success: Message has been received";
 
     public static String registerMessageInbox = "register-message-inbox";

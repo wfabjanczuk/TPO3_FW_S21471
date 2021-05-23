@@ -183,9 +183,21 @@ public class MainServer extends SocketChannelServer {
     }
 
     private String publishMessage(String[] messageParts) {
-        String topic = Json.unserializeStrings(messageParts[1]).get(1);
+        List<String> messageAndTopic = Json.unserializeStrings(messageParts[1]);
 
-        topicsInboxesMap.get(topic).forEach(inbox -> {
+        if (messageAndTopic.get(0).trim().isEmpty()) {
+            return Message.publishEmptyError;
+        }
+
+        String topic = messageAndTopic.get(1);
+
+        List<String> topicInboxes = topicsInboxesMap.get(topic);
+
+        if (topicInboxes == null) {
+            return Message.publishNoSubscribersWarning;
+        }
+
+        topicInboxes.forEach(inbox -> {
             try {
                 String result = inboxesSubscriptionsMap.get(inbox).forwardMessage(String.join(" ", messageParts));
                 logReceived(result);
