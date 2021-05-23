@@ -1,11 +1,11 @@
-package zad1.gui.controller;
+package Zad1.gui.controller;
 
 import javafx.event.Event;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
-import zad1.socket.server.MessageInboxServer;
-import zad1.socket.service.ClientService;
+import Zad1.socket.server.MessageInboxServer;
+import Zad1.socket.service.ClientService;
 
 public class ClientGuiController {
     private ClientService clientService;

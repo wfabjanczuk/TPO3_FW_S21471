@@ -1,6 +1,6 @@
-package zad1.socket.server;
+package Zad1.socket.server;
 
-import zad1.socket.Loggable;
+import Zad1.socket.Loggable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

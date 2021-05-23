@@ -1,6 +1,6 @@
-package zad1.socket.service;
+package Zad1.socket.service;
 
-import zad1.constant.Message;
+import Zad1.constant.Message;
 
 import java.io.IOException;
 

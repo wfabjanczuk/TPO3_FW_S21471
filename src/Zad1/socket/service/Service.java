@@ -1,6 +1,6 @@
-package zad1.socket.service;
+package Zad1.socket.service;
 
-import zad1.socket.Loggable;
+import Zad1.socket.Loggable;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,9 +1,9 @@
-package zad1.socket.server;
+package Zad1.socket.server;
 
-import zad1.constant.Message;
-import zad1.constant.Topic;
-import zad1.serialization.Json;
-import zad1.socket.service.SubscriptionService;
+import Zad1.constant.Message;
+import Zad1.constant.Topic;
+import Zad1.serialization.Json;
+import Zad1.socket.service.SubscriptionService;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

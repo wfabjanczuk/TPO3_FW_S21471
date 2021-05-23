@@ -1,12 +1,12 @@
-package zad1.gui;
+package Zad1.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import zad1.gui.controller.AdminGuiController;
-import zad1.socket.service.AdminService;
+import Zad1.gui.controller.AdminGuiController;
+import Zad1.socket.service.AdminService;
 
 import java.net.URL;
 

@@ -1,7 +1,7 @@
-package zad1.socket.service;
+package Zad1.socket.service;
 
-import zad1.constant.Message;
-import zad1.serialization.Json;
+import Zad1.constant.Message;
+import Zad1.serialization.Json;
 
 import java.io.IOException;
 import java.util.ArrayList;

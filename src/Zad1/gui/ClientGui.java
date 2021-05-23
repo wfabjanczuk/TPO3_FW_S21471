@@ -1,13 +1,13 @@
-package zad1.gui;
+package Zad1.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import zad1.gui.controller.ClientGuiController;
-import zad1.socket.server.MessageInboxServer;
-import zad1.socket.service.ClientService;
+import Zad1.gui.controller.ClientGuiController;
+import Zad1.socket.server.MessageInboxServer;
+import Zad1.socket.service.ClientService;
 
 import java.net.URL;
 

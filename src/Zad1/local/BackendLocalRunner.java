@@ -1,16 +1,15 @@
-package zad1.local;
+package Zad1.local;
 
-import zad1.gui.AdminGui;
-import zad1.socket.service.AdminService;
+import Zad1.socket.server.MainServer;
 
-public class AdminLocalRunner {
+public class BackendLocalRunner {
     public static void main(String[] args) {
         try {
             String host = args[0];
             int port = Integer.parseInt(args[1]);
 
-            AdminGui adminGui = new AdminGui();
-            adminGui.initialize(new AdminService(host, port));
+            MainServer server = new MainServer(host, port);
+            server.start();
         } catch (Exception exc) {
             exc.printStackTrace();
             System.exit(1);

@@ -1,4 +1,4 @@
-package zad1.serialization;
+package Zad1.serialization;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,8 +1,8 @@
-package zad1.local;
+package Zad1.local;
 
-import zad1.gui.ClientGui;
-import zad1.socket.server.MessageInboxServer;
-import zad1.socket.service.ClientService;
+import Zad1.gui.ClientGui;
+import Zad1.socket.server.MessageInboxServer;
+import Zad1.socket.service.ClientService;
 
 public class ClientLocalRunner {
     public static void main(String[] args) {

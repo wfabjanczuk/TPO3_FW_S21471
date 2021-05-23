@@ -1,4 +1,4 @@
-package zad1.constant;
+package Zad1.constant;
 
 public class Message {
     public static String goodbyeFromAdmin = "goodbye-from-admin";

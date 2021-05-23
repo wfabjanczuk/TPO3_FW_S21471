@@ -1,8 +1,8 @@
-package zad1.socket.server;
+package Zad1.socket.server;
 
 import javafx.scene.control.TextArea;
-import zad1.constant.Message;
-import zad1.serialization.Json;
+import Zad1.constant.Message;
+import Zad1.serialization.Json;
 
 import java.io.IOException;
 import java.nio.CharBuffer;

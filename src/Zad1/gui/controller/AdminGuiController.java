@@ -1,11 +1,11 @@
-package zad1.gui.controller;
+package Zad1.gui.controller;
 
 import javafx.event.Event;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import zad1.socket.service.AdminService;
+import Zad1.socket.service.AdminService;
 
 import java.util.List;
 
