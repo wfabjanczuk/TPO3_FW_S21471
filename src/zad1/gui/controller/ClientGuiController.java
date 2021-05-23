@@ -7,8 +7,6 @@ import javafx.scene.text.Text;
 import zad1.socket.server.MessageInboxServer;
 import zad1.socket.service.ClientService;
 
-import java.util.List;
-
 public class ClientGuiController {
     private ClientService clientService;
     private MessageInboxServer messageInboxServer;
@@ -25,7 +23,6 @@ public class ClientGuiController {
 
     public void setMessageInboxServer(MessageInboxServer messageInboxServer) {
         this.messageInboxServer = messageInboxServer;
-        this.messageInboxServer.setMessagesTextArea(messages);
     }
 
     private void registerMessageInbox() {
@@ -42,6 +39,10 @@ public class ClientGuiController {
     }
 
     public void initialize() {
+        this.clientService.setTopicToSubscribeChoiceBox(topicToSubscribe);
+        this.clientService.setTopicToUnsubscribeChoiceBox(topicToUnsubscribe);
+        this.messageInboxServer.setMessagesTextArea(messages);
+
         registerMessageInbox();
         refreshTopics();
     }
@@ -51,13 +52,7 @@ public class ClientGuiController {
     }
 
     private void refreshTopics() {
-        List<String> topicsList = clientService.getTopics();
-
-        topicToSubscribe.getItems().clear();
-        topicToSubscribe.getItems().addAll(topicsList);
-
-        topicToUnsubscribe.getItems().clear();
-        topicToUnsubscribe.getItems().addAll(topicsList);
+        clientService.updateTopics();
     }
 
     private void clearResults() {
@@ -84,7 +79,7 @@ public class ClientGuiController {
 
         String result;
         try {
-            result = clientService.subscribeToTopic(topicToUnsubscribe.getValue());
+            result = clientService.unsubscribeFromTopic(topicToUnsubscribe.getValue());
         } catch (Exception exception) {
             result = "Error in unsubscribing from topic";
         }

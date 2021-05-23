@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainServer extends SocketChannelServer {
     private static final List<String> topics = new LinkedList<>(Arrays.asList(Topic.defaultTopics));
@@ -34,8 +35,12 @@ public class MainServer extends SocketChannelServer {
             return handleGoodbyeFromClientMessage(socketChannel);
         }
 
-        if (messageType.equals(Message.getTopics)) {
-            return handleGetTopicsMessage(socketChannel);
+        if (messageType.equals(Message.getTopicsForAdmin)) {
+            return handleGetTopicsForAdminMessage(socketChannel);
+        }
+
+        if (messageType.equals(Message.getTopicsForClient)) {
+            return handleGetTopicsForClientMessage(socketChannel);
         }
 
         if (messageType.equals(Message.addTopic)) {
@@ -56,6 +61,10 @@ public class MainServer extends SocketChannelServer {
 
         if (messageType.equals(Message.subscribeToTopic)) {
             return handleSubscribe(messageParts, socketChannel);
+        }
+
+        if (messageType.equals(Message.unsubscribeFromTopic)) {
+            return handleUnsubscribe(messageParts, socketChannel);
         }
 
         return false;
@@ -94,8 +103,27 @@ public class MainServer extends SocketChannelServer {
         topicsToRemove.forEach(topicsInboxesMap::remove);
     }
 
-    private boolean handleGetTopicsMessage(SocketChannel socketChannel) throws IOException {
+    private boolean handleGetTopicsForAdminMessage(SocketChannel socketChannel) throws IOException {
         String response = Json.serializeStrings(topics) + '\n';
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
+        socketChannel.write(responseByteBuffer);
+
+        logSent(response);
+        return true;
+    }
+
+    private boolean handleGetTopicsForClientMessage(SocketChannel socketChannel) throws IOException {
+        String messageInboxConnectionString = clientsInboxesMap.get(getClientConnectionString(socketChannel));
+
+        List<String> clientTopics = topicsInboxesMap.entrySet().stream()
+                .filter(e -> e.getValue().contains(messageInboxConnectionString))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        String response = Json.serializeStrings(topics.stream().filter(
+                t -> !clientTopics.contains(t)
+        ).collect(Collectors.toList())) + " " + Json.serializeStrings(clientTopics) + '\n';
+
         ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response));
         socketChannel.write(responseByteBuffer);
 
@@ -141,6 +169,7 @@ public class MainServer extends SocketChannelServer {
     private String deleteTopic(String topic) {
         if (topics.contains(topic)) {
             topics.remove(topic);
+            topicsInboxesMap.remove(topic);
             return Message.deleteTopicSuccess;
         }
 
@@ -218,6 +247,44 @@ public class MainServer extends SocketChannelServer {
         }
 
         return Message.subscribeToTopicSuccess;
+    }
+
+    private boolean handleUnsubscribe(String[] messageParts, SocketChannel socketChannel) throws IOException {
+        String response = unsubscribeFromTopic(messageParts, socketChannel);
+
+        ByteBuffer responseByteBuffer = charset.encode(CharBuffer.wrap(response + '\n'));
+        socketChannel.write(responseByteBuffer);
+
+        logSent(response);
+        return true;
+    }
+
+    private String unsubscribeFromTopic(String[] messageParts, SocketChannel socketChannel) {
+        String topic = Json.unserializeString(messageParts[1]);
+
+        if (topic.trim().isEmpty()) {
+            return Message.unsubscribeFromTopicEmptyError;
+        }
+
+        if (!topics.contains(topic)) {
+            return Message.unsubscribeFromTopicNotExistsError;
+        }
+
+        String messageInboxConnectionString = clientsInboxesMap.get(getClientConnectionString(socketChannel));
+
+        if (topicsInboxesMap.get(topic) == null) {
+            return Message.unsubscribeFromTopicNotSubscribedError;
+        } else {
+            List<String> topicInboxes = topicsInboxesMap.get(topic);
+
+            if (!topicInboxes.contains(messageInboxConnectionString)) {
+                return Message.unsubscribeFromTopicNotSubscribedError;
+            }
+
+            topicInboxes.remove(messageInboxConnectionString);
+        }
+
+        return Message.unsubscribeFromTopicSuccess;
     }
 
     private void showMaps() {

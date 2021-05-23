@@ -27,7 +27,7 @@ public class Json {
     }
 
     public static List<String> unserializeStrings(String serializedStrings) {
-        if (serializedStrings.length() < 4) {
+        if (serializedStrings.length() < 2) {
             throw new IllegalArgumentException("Invalid string to unserialize");
         }
 
@@ -36,6 +36,6 @@ public class Json {
                 .split("(?<=\"),(?=\")")
         );
 
-        return stringStream.map(Json::unserializeString).collect(Collectors.toList());
+        return stringStream.map(s -> s.isEmpty() ? s : Json.unserializeString(s)).collect(Collectors.toList());
     }
 }

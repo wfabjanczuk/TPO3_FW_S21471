@@ -4,10 +4,27 @@ import zad1.constant.Message;
 import zad1.serialization.Json;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminService extends TopicService {
     public AdminService(String host, int port) {
         super(host, port);
+    }
+
+    public List<String> getTopics() {
+        printWriter.println(Message.getTopicsForAdmin);
+        logSent(Message.getTopicsForAdmin);
+
+        try {
+            String response = bufferedReader.readLine();
+
+            logReceived(response);
+            return Json.unserializeStrings(response);
+        } catch (Exception exception) {
+            logException(exception);
+            return new ArrayList<>();
+        }
     }
 
     public String addTopic(String topic) throws IOException {

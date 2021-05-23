@@ -1,7 +1,5 @@
 package zad1.socket.service;
 
-import zad1.constant.Message;
-import zad1.serialization.Json;
 import zad1.socket.Loggable;
 
 import java.io.BufferedReader;
@@ -9,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 abstract public class TopicService implements Loggable {
     abstract protected void sayGoodbye();
@@ -27,21 +23,6 @@ abstract public class TopicService implements Loggable {
         } catch (Exception exception) {
             logException(exception);
             System.exit(1);
-        }
-    }
-
-    public List<String> getTopics() {
-        printWriter.println(Message.getTopics);
-        logSent(Message.getTopics);
-
-        try {
-            String response = bufferedReader.readLine();
-
-            logReceived(response);
-            return Json.unserializeStrings(response);
-        } catch (Exception exception) {
-            logException(exception);
-            return new ArrayList<>();
         }
     }
 

@@ -5,7 +5,8 @@ public class Message {
     public static String goodbyeFromMainServer = "goodbye-from-main-server";
     public static String goodbyeFromClient = "goodbye-from-client";
 
-    public static String getTopics = "get-topics";
+    public static String getTopicsForAdmin = "get-topics-for-admin";
+    public static String getTopicsForClient = "get-topics-for-client";
 
     public static String addTopic = "add-topic";
     public static String addTopicSuccess = "Success: Topic has been set";
@@ -31,6 +32,7 @@ public class Message {
 
     public static String unsubscribeFromTopic = "unsubscribe-from-topic";
     public static String unsubscribeFromTopicSuccess = "Success: Topic unsubscribed";
+    public static String unsubscribeFromTopicEmptyError = "Error: Topic is empty";
     public static String unsubscribeFromTopicNotSubscribedError = "Error: Topic was not subscribed";
     public static String unsubscribeFromTopicNotExistsError = "Error: Topic does not exist";
 }
